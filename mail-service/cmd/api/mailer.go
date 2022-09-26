@@ -3,6 +3,7 @@ package main
 import (
 	"bytes"
 	"html/template"
+	"log"
 	"time"
 
 	"github.com/vanng822/go-premailer/premailer"
@@ -26,8 +27,8 @@ type Message struct {
 	To          string
 	Subject     string
 	Attachments []string
-	Data        interface{}
-	DataMap     map[string]interface{}
+	Data        any
+	DataMap     map[string]any
 }
 
 func (m *Mail) SendSMTPMessage(msg Message) error {
@@ -36,7 +37,7 @@ func (m *Mail) SendSMTPMessage(msg Message) error {
 	}
 
 	if msg.FromName == "" {
-		msg.From = m.FromName
+		msg.FromName = m.FromName
 	}
 
 	data := map[string]any{
@@ -55,18 +56,6 @@ func (m *Mail) SendSMTPMessage(msg Message) error {
 		return err
 	}
 
-	// create a new email
-	email := mail.NewMSG()
-	email.SetFrom(msg.From).AddTo(msg.To, msg.Subject).SetSubject(msg.Subject)
-	email.SetBody(mail.TextPlain, plainMessage)
-	email.AddAlternative(mail.TextHTML, formattedMessage)
-	if len(msg.Attachments) > 0 {
-		for _, x := range msg.Attachments {
-			email.AddAttachment(x)
-		}
-	}
-
-	// build SMTP client
 	server := mail.NewSMTPClient()
 	server.Host = m.Host
 	server.Port = m.Port
@@ -79,12 +68,27 @@ func (m *Mail) SendSMTPMessage(msg Message) error {
 
 	smtpClient, err := server.Connect()
 	if err != nil {
+		log.Println(err)
 		return err
 	}
 
-	// send email to SMTP Client
+	email := mail.NewMSG()
+	email.SetFrom(msg.From).
+		AddTo(msg.To).
+		SetSubject(msg.Subject)
+
+	email.SetBody(mail.TextPlain, plainMessage)
+	email.AddAlternative(mail.TextHTML, formattedMessage)
+
+	if len(msg.Attachments) > 0 {
+		for _, x := range msg.Attachments {
+			email.AddAttachment(x)
+		}
+	}
+
 	err = email.Send(smtpClient)
 	if err != nil {
+		log.Println(err)
 		return err
 	}
 
@@ -127,6 +131,7 @@ func (m *Mail) buildPlainTextMessage(msg Message) (string, error) {
 	}
 
 	plainMessage := tpl.String()
+
 	return plainMessage, nil
 }
 
@@ -152,7 +157,7 @@ func (m *Mail) inlineCSS(s string) (string, error) {
 
 func (m *Mail) getEncryption(s string) mail.Encryption {
 	switch s {
-	case "cls":
+	case "tls":
 		return mail.EncryptionSTARTTLS
 	case "ssl":
 		return mail.EncryptionSSLTLS

@@ -8,26 +8,24 @@ import (
 	"strconv"
 )
 
-const webPort = "80"
-
 type Config struct {
 	Mailer Mail
 }
+
+const webPort = "80"
 
 func main() {
 	app := Config{
 		Mailer: createMail(),
 	}
 
-	log.Printf("Starting mailer service on port %s\n", webPort)
+	log.Println("Starting mail service on port", webPort)
 
-	// define http server
 	srv := &http.Server{
 		Addr:    fmt.Sprintf(":%s", webPort),
 		Handler: app.routes(),
 	}
 
-	// start the server
 	err := srv.ListenAndServe()
 	if err != nil {
 		log.Panic(err)
@@ -43,8 +41,9 @@ func createMail() Mail {
 		Username:    os.Getenv("MAIL_USERNAME"),
 		Password:    os.Getenv("MAIL_PASSWORD"),
 		Encryption:  os.Getenv("MAIL_ENCRYPTION"),
-		FromName:    os.Getenv("MAIL_FROM_NAME"),
-		FromAddress: os.Getenv("MAIL_FROM_ADDRESS"),
+		FromName:    os.Getenv("FROM_NAME"),
+		FromAddress: os.Getenv("FROM_ADDRESS"),
 	}
+
 	return m
 }
