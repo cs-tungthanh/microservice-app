@@ -1,16 +1,18 @@
 package event
 
-import amqp "github.com/rabbitmq/amqp091-go"
+import (
+	amqp "github.com/rabbitmq/amqp091-go"
+)
 
-func declareChannel(ch *amqp.Channel) error {
+func declareExchange(ch *amqp.Channel) error {
 	return ch.ExchangeDeclare(
 		"logs_topic", // name
 		"topic",      // type
 		true,         // durable?
-		false,        //auto-deleted?
+		false,        // auto-deleted?
 		false,        // internal?
 		false,        // no-wait?
-		nil,          //arguments?
+		nil,          // arguements?
 	)
 }
 

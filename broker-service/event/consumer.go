@@ -28,13 +28,13 @@ func NewConsumer(conn *amqp.Connection) (Consumer, error) {
 	return consumer, nil
 }
 
-func (c *Consumer) setup() error {
-	channel, err := c.conn.Channel()
+func (consumer *Consumer) setup() error {
+	channel, err := consumer.conn.Channel()
 	if err != nil {
 		return err
 	}
 
-	return declareChannel(channel)
+	return declareExchange(channel)
 }
 
 type Payload struct {
@@ -68,14 +68,14 @@ func (consumer *Consumer) Listen(topics []string) error {
 		}
 	}
 
-	message, err := ch.Consume(q.Name, "", true, false, false, false, nil)
+	messages, err := ch.Consume(q.Name, "", true, false, false, false, nil)
 	if err != nil {
 		return err
 	}
 
 	forever := make(chan bool)
 	go func() {
-		for d := range message {
+		for d := range messages {
 			var payload Payload
 			_ = json.Unmarshal(d.Body, &payload)
 
@@ -83,7 +83,7 @@ func (consumer *Consumer) Listen(topics []string) error {
 		}
 	}()
 
-	fmt.Printf("Waiting for message [Exchange, Queue] [logs_topic, %s]", q.Name)
+	fmt.Printf("Waiting for message [Exchange, Queue] [logs_topic, %s]\n", q.Name)
 	<-forever
 
 	return nil
@@ -91,16 +91,17 @@ func (consumer *Consumer) Listen(topics []string) error {
 
 func handlePayload(payload Payload) {
 	switch payload.Name {
-	case "logs", "event":
-		// logs whatever we get
+	case "log", "event":
+		// log whatever we get
 		err := logEvent(payload)
 		if err != nil {
 			log.Println(err)
 		}
 
 	case "auth":
-		//authentication
-		// you can have as many the cases as you want, as long as you write the logic
+		// authenticate
+
+	// you can have as many cases as you want, as long as you write the logic
 
 	default:
 		err := logEvent(payload)
