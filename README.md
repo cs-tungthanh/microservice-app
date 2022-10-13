@@ -1,4 +1,6 @@
-# microservice-app
+# Micro-app
+
+![Architecture Overview](./imgs/overview_arch.drawio.png)
 
 # 1. What I'll build
 - A frontend web application that connects to 5 Microservices:

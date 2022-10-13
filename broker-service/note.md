@@ -25,3 +25,9 @@ just declare it type and I'll call our PC server and it's a struct and it has no
 we're also going to want to define the kind of payload that we're going to receive from our PC
 
 here something I'm going to expose
+
+go install google.golang.org/protobuf/cmd/protoc-gen-go@v1.27 
+go install google.golang.org/grpc/cmd/protoc-gen-go-grpc@v1.2
+
+go get google.golang.org/grpc  
+go get google.golang.org/protobuf
