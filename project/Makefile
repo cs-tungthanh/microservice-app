@@ -71,3 +71,22 @@ stop:
 	@echo "Stopping front end..."
 	@-pkill -SIGTERM -f "./${FRONT_END_BINARY}"
 	@echo "Stopped front end!"
+
+authName=authentication-service
+brokerName=broker-service
+listenerName=listener-service
+loggerName=logger-service
+mailName=mail-service
+build_images:
+	cd ../${authName} && docker build -f ./${authName}.dockerfile -t cstungthanh/${authName}:0.1.0 .
+	cd ../${brokerName} && docker build -f ./${brokerName}.dockerfile -t cstungthanh/${brokerName}:0.1.0 .
+	cd ../${listenerName} && docker build -f ./${listenerName}.dockerfile -t cstungthanh/${listenerName}:0.1.0 .
+	cd ../${loggerName} && docker build -f ./${loggerName}.dockerfile -t cstungthanh/${loggerName}:0.1.0 .
+	cd ../${mailName} && docker build -f ./${mailName}.dockerfile -t cstungthanh/${mailName}:0.1.0 .
+
+push_images:
+	docker push cstungthanh/${authName}:0.1.0
+	docker push cstungthanh/${brokerName}:0.1.0
+	docker push cstungthanh/${listenerName}:0.1.0
+	docker push cstungthanh/${loggerName}:0.1.0
+	docker push cstungthanh/${mailName}:0.1.0
