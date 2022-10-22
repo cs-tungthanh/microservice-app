@@ -16,9 +16,16 @@ kubectl get pods
 
 // get services
 kubectl get svc  
++ kubectl delete svc broker-service
 
 kubectl get deployment  
 
 // run file yml
 kubectl apply -f k8s
 kubectl apply -f k8s/mongo.yml
+
+
+- load balance
+kubectl expose deployment broker-service --type=LoadBalancer --port=8080 --target-port=8080
+minikube tunnel
+

@@ -1,31 +1,43 @@
 package main
 
-import "fmt"
+import (
+	"fmt"
+	"strconv"
+	"time"
+)
 
-func maximumScore(nums []int, multipliers []int) int {
-	var dp [][]int
+const (
+	numOfUrls   = 10000
+	numOfWorker = 5
+)
 
-	// init
-	dp = make([][]int, len(multipliers))
-	for i, _ := range dp {
-		dp[i] = make([]int, len(nums))
+func crawUrl(queue <-chan int, workerId string) {
+	for v := range queue {
+		fmt.Printf("Worker %s is crawling URL %d\n", workerId, v)
+		time.Sleep(1 * time.Second)
 	}
+}
 
-	for r := 0; r < len(dp); r++ {
-		for c := 0; c < len(dp[0]); c++ {
-			dp[r][c] = multipliers[r] * nums[c]
+func startQueue() <-chan int {
+	queue := make(chan int, 100)
+	go func() {
+		defer close(queue)
+
+		for i := 0; i < numOfUrls; i++ {
+			queue <- i
+			fmt.Printf("URL %d has been enqueued\n", i)
 		}
-	}
+	}()
 
-	for i, _ := range dp {
-		fmt.Println(dp[i])
-	}
-	return 1
+	return queue
 }
 
 func main() {
-	nums := []int{-5, -3, -3, -2, 7, 1}
-	multipliers := []int{-10, -5, 3, 4, 6}
+	queue := startQueue()
 
-	fmt.Println(maximumScore(nums, multipliers))
+	for i := 0; i < numOfWorker; i++ {
+		go crawUrl(queue, strconv.Itoa(i))
+	}
+
+	time.Sleep(5 * time.Minute)
 }
