@@ -77,6 +77,7 @@ brokerName=broker-service
 listenerName=listener-service
 loggerName=logger-service
 mailName=mail-service
+# docker build -f ./service.dockerfile -t cstungthanh/${mailName}:0.1.0 .
 build_images:
 	cd ../${authName} && docker build -f ./${authName}.dockerfile -t cstungthanh/${authName}:0.1.0 .
 	cd ../${brokerName} && docker build -f ./${brokerName}.dockerfile -t cstungthanh/${brokerName}:0.1.0 .
@@ -90,3 +91,6 @@ push_images:
 	docker push cstungthanh/${listenerName}:0.1.0
 	docker push cstungthanh/${loggerName}:0.1.0
 	docker push cstungthanh/${mailName}:0.1.0
+
+start_postgres:
+	docker-compose -f ./postgres.yml up -d
