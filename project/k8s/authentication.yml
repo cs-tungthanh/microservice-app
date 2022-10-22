@@ -12,7 +12,7 @@ spec:
       labels:
         app: authentication-service
     spec:
-      containers: 
+      containers:
       - name: authentication-service
         image: "cstungthanh/authentication-service:0.1.0"
         resources:
@@ -22,8 +22,11 @@ spec:
           limits:
             memory: "128Mi"
             cpu: "500m"
+        env:
+          - name: DSN
+            value: "host=host.minikube.internal port=5432 user=postgres password=password dbname=users sslmode=disable timezone=UTC connect_timeout=5"
         ports:
-          - containerPort: 8080
+          - containerPort: 80
 
 ---
 
@@ -37,6 +40,5 @@ spec:
   ports:
     - protocol: TCP
       name: main-port
-      port: 8080
-      targetPort: 8080
-      
+      port: 80
+      targetPort: 80

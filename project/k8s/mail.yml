@@ -12,7 +12,7 @@ spec:
       labels:
         app: mailer-service
     spec:
-      containers: 
+      containers:
       - name: mailer-service
         image: "cstungthanh/mail-service:0.1.0"
         resources:
@@ -24,7 +24,7 @@ spec:
             cpu: "500m"
         env:
           - name: MAIL_DOMAIN
-            value: "logs"
+            value: ""
           - name: MAIL_HOST
             value: "localhost"
           - name: MAIL_PORT
@@ -37,8 +37,8 @@ spec:
             value: ""
           - name: FROM_NAME
             value: "Juliust"
-          - name: FROM_ADDRESS 
-            value: admin@example.com
+          - name: FROM_ADDRESS
+            value: "admin@example.com"
         ports:
           - containerPort: 80
 
@@ -56,4 +56,3 @@ spec:
       name: main-port
       port: 80
       targetPort: 80
-      

@@ -12,7 +12,7 @@ spec:
       labels:
         app: logger-service
     spec:
-      containers: 
+      containers:
       - name: logger-service
         image: "cstungthanh/logger-service:0.1.0"
         resources:
@@ -23,7 +23,9 @@ spec:
             memory: "128Mi"
             cpu: "500m"
         ports:
-          - containerPort: 8080
+          - containerPort: 80
+          - containerPort: 5001
+          - containerPort: 50001
 
 ---
 
@@ -36,7 +38,14 @@ spec:
     app: logger-service
   ports:
     - protocol: TCP
-      name: main-port
-      port: 8080
-      targetPort: 8080
-      
+      name: web-port
+      port: 80
+      targetPort: 80
+    - protocol: TCP
+      name: rpc-port
+      port: 5001
+      targetPort: 5001
+    - protocol: TCP
+      name: grpc-port
+      port: 50001
+      targetPort: 50001

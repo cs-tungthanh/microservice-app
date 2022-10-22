@@ -8,11 +8,11 @@ spec:
     matchLabels:
       app: mailhog
   template:
-    metadata: 
+    metadata:
       labels:
         app: mailhog
     spec:
-      containers: 
+      containers:
       - name: mailhog
         image: "mailhog/mailhog:latest"
         resources:
@@ -44,4 +44,3 @@ spec:
       name: web-port
       port: 8025
       targetPort: 8025
-      

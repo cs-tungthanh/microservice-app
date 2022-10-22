@@ -12,7 +12,7 @@ spec:
       labels:
         app: listener-service
     spec:
-      containers: 
+      containers:
       - name: listener-service
         image: "cstungthanh/listener-service:0.1.0"
         resources:
@@ -23,7 +23,7 @@ spec:
             memory: "128Mi"
             cpu: "500m"
         ports:
-          - containerPort: 8080
+          - containerPort: 80
 
 ---
 
@@ -36,7 +36,6 @@ spec:
     app: listener-service
   ports:
     - protocol: TCP
-      name: main-port
-      port: 8080
-      targetPort: 8080
-      
+      name: web-port
+      port: 80
+      targetPort: 80
